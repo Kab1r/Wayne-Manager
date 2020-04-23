@@ -20,12 +20,12 @@ impl EventHandler for Handler {
         old: Option<VoiceState>,
         new_state: VoiceState,
     ) {
-        match event(old, &new_state, &WAYNE_ID) {
+        match event(&old, &new_state, &WAYNE_ID) {
             // On Join Event
             Event::WayneJoin => on_join(&ctx, &new_state),
 
             // On Leave Event
-            Event::WayneLeave => on_leave(&ctx, &new_state),
+            Event::WayneLeave => on_leave(&ctx, &old.unwrap()),
 
             // On Move Event
             Event::WayneMove => {

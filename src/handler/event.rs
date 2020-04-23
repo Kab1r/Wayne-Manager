@@ -7,7 +7,7 @@ pub enum Event {
     NonWayne,
 }
 
-pub fn event(old: Option<VoiceState>, new_state: &VoiceState, wayne_id: &u64) -> Event {
+pub fn event(old: &Option<VoiceState>, new_state: &VoiceState, wayne_id: &u64) -> Event {
     if new_state.user_id.as_u64() != wayne_id {
         return Event::NonWayne;
     }
@@ -15,8 +15,8 @@ pub fn event(old: Option<VoiceState>, new_state: &VoiceState, wayne_id: &u64) ->
     if old.is_none() {
         return Event::WayneJoin;
     }
-    let old_state = old.expect("Unexpected None Old Voice State");
-    
+    let old_state = old.clone().expect("Unexpected None Old Voice State");
+
     if new_state.channel_id.is_none() {
         return Event::WayneLeave;
     }

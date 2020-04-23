@@ -19,8 +19,8 @@ pub fn on_join(ctx: &Context, new_state: &VoiceState) {
 
     rename_voice_channel(ctx, channel_id, "Wayne".to_string());
 }
-pub fn on_leave(ctx: &Context, new_state: &VoiceState) {
-    let channel_id = new_state
+pub fn on_leave(ctx: &Context, old_state: &VoiceState) {
+    let channel_id = old_state
         .channel_id
         .expect("Unexpected None New State Channel Id");
 
