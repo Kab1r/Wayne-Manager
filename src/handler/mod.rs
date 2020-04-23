@@ -29,8 +29,8 @@ impl EventHandler for Handler {
 
             // On Move Event
             Event::WayneMove => {
+                on_leave(&ctx, &old.unwrap());
                 on_join(&ctx, &new_state);
-                on_leave(&ctx, &new_state);
             }
             // On NoneWayne Event
             Event::NonWayne => {}
