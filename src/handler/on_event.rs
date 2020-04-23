@@ -39,6 +39,6 @@ pub fn on_leave(ctx: &Context, old_state: &VoiceState) {
 fn rename_voice_channel(ctx: &Context, channel_id: ChannelId, to: String) {
     match channel_id.edit(ctx, |c| c.name(to)) {
         Ok(_) => (),
-        Err(e) => println!("{}", e),
+        Err(e) => println!("Channel Edit Error: {}", e),
     };
 }
