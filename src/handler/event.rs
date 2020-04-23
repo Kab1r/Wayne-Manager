@@ -30,5 +30,5 @@ pub fn event(old: &Option<VoiceState>, new_state: &VoiceState, wayne_id: &u64) -
         return Event::WayneMove;
     }
 
-    return Event::NonWayne;
+    Event::NonWayne
 }

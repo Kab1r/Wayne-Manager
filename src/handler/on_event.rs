@@ -10,7 +10,8 @@ use lazy_static::lazy_static;
 lazy_static! {
     static ref CHANNEL_NAME: Mutex<String> = Mutex::new(String::new());
 }
-pub fn on_join(ctx: &Context, new_state: &VoiceState) {
+
+pub fn on_join(ctx: &Context, new_state: &VoiceState) -> () {
     let channel_id = new_state
         .channel_id
         .expect("Unexpected None New State Channel Id");
@@ -23,7 +24,7 @@ pub fn on_join(ctx: &Context, new_state: &VoiceState) {
 
     rename_voice_channel(ctx, channel_id, "Wayne".to_string());
 }
-pub fn on_leave(ctx: &Context, old_state: &VoiceState) {
+pub fn on_leave(ctx: &Context, old_state: &VoiceState) -> () {
     let channel_id = old_state
         .channel_id
         .expect("Unexpected None New State Channel Id");
@@ -36,7 +37,7 @@ pub fn on_leave(ctx: &Context, old_state: &VoiceState) {
     *global = String::new();
 }
 
-fn rename_voice_channel(ctx: &Context, channel_id: ChannelId, to: String) {
+fn rename_voice_channel(ctx: &Context, channel_id: ChannelId, to: String) -> () {
     match channel_id.edit(ctx, |c| c.name(to)) {
         Ok(_) => (),
         Err(e) => println!("Channel Edit Error: {}", e),
