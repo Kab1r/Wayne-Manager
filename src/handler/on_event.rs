@@ -26,7 +26,7 @@ pub fn on_leave(ctx: &Context, new_state: &VoiceState) {
 
     rename_voice_channel(ctx, channel_id, CHANNEL_NAME.lock().unwrap().clone());
 
-    *CHANNEL_NAME.lock().unwrap() = String::new()
+    *CHANNEL_NAME.lock().unwrap() = String::new();
 }
 
 fn rename_voice_channel(ctx: &Context, channel_id: ChannelId, to: String) {
