@@ -15,7 +15,11 @@ pub fn on_join(ctx: &Context, new_state: &VoiceState) {
         .channel_id
         .expect("Unexpected None New State Channel Id");
 
-    *CHANNEL_NAME.lock().unwrap() = channel_id.name(&ctx).expect("Unexpected None Channel Name");
+    let mut global = match CHANNEL_NAME.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => poisoned.into_inner(),
+    };
+    *global = channel_id.name(&ctx).expect("Unexpected None Channel Name");
 
     rename_voice_channel(ctx, channel_id, "Wayne".to_string());
 }
@@ -24,9 +28,12 @@ pub fn on_leave(ctx: &Context, old_state: &VoiceState) {
         .channel_id
         .expect("Unexpected None New State Channel Id");
 
-    rename_voice_channel(ctx, channel_id, CHANNEL_NAME.lock().unwrap().clone());
-
-    *CHANNEL_NAME.lock().unwrap() = String::new();
+    let mut global = match CHANNEL_NAME.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => poisoned.into_inner(),
+    };
+    rename_voice_channel(ctx, channel_id, global.clone());
+    *global = String::new();
 }
 
 fn rename_voice_channel(ctx: &Context, channel_id: ChannelId, to: String) {
