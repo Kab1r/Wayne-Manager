@@ -1,3 +1,6 @@
+//    Copyright (C) 2020  Kabir Kwatra
+//    Full notice in main.rs file
+
 use std::env;
 
 pub fn wayne_id() -> u64 {

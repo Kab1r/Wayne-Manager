@@ -1,3 +1,6 @@
+//    Copyright (C) 2020  Kabir Kwatra
+//    Full notice in main.rs file
+
 use serenity::model::id::GuildId;
 use serenity::model::voice::VoiceState;
 use serenity::prelude::{Context, EventHandler};

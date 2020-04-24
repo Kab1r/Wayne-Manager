@@ -1,3 +1,6 @@
+//    Copyright (C) 2020  Kabir Kwatra
+//    Full notice in main.rs file
+
 use serenity::model::voice::VoiceState;
 
 pub enum Event {

@@ -1,10 +1,13 @@
-use std::sync::Mutex;
+//    Copyright (C) 2020  Kabir Kwatra
+//    Full notice in main.rs file
 
 use serenity::model::id::ChannelId;
 use serenity::model::voice::VoiceState;
 use serenity::prelude::Context;
 
 use lazy_static::lazy_static;
+
+use std::sync::Mutex;
 
 // Global State
 lazy_static! {
