@@ -2,7 +2,7 @@
 name = "wayne-manager"
 version = "0.1.0"
 authors = ["Kabir Kwatra <kabir@kwatra.me>"]
-license = "AGPL-3.0-only"
+license = "AGPL-3.0-or-later"
 publish = false
 edition = "2018"
 

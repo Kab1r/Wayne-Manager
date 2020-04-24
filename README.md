@@ -14,4 +14,5 @@ These environment variables are required to run the bot.
 ## Setup & Execution
 
 After installing the [Rust toolchain](https://rustup.rs), run `cargo build` to produce a executable.
+
 Running this executable will start the bot.
