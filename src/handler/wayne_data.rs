@@ -3,6 +3,7 @@
 
 use std::env;
 
+/// Returns Wayne's ID stored as an environment variable.
 pub fn wayne_id() -> u64 {
     env::var("WAYNE_ID")
         .expect("Missing WAYNE_ID in Env")

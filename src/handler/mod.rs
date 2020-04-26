@@ -14,8 +14,11 @@ pub use event::{event, Event};
 mod on_event;
 pub use on_event::{on_join, on_leave};
 
+/// Handles Discord Events.
 pub struct Handler;
 impl EventHandler for Handler {
+    /// Dispatched when a user joins, leaves or moves to a voice channel.
+    /// Provides the guild's id (if available) and the old and the new state of the guild's voice channels.
     fn voice_state_update(
         &self,
         ctx: Context,
@@ -35,8 +38,8 @@ impl EventHandler for Handler {
                 on_leave(&ctx, &old.unwrap());
                 on_join(&ctx, &new_state);
             }
-            // On NoneWayne Event
-            Event::NonWayne => {}
+            // On NoneWayne Event (default)
+            _ => (),
         }
     }
 }

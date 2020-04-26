@@ -20,9 +20,11 @@ use std::env;
 
 mod handler;
 pub use handler::Handler;
+
+/// Starts the Wayne Manager Discord Bot.
 fn main() {
     let mut client = Client::new(
-        &env::var("DISCORD_TOKEN").expect("Missing Token in Enviroment"),
+        &env::var("DISCORD_TOKEN").expect("Missing Token in Environment"),
         Handler,
     )
     .expect("Error creating client");

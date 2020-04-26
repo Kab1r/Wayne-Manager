@@ -3,6 +3,7 @@
 
 use serenity::model::voice::VoiceState;
 
+/// A Wayne Event
 pub enum Event {
     WayneJoin,
     WayneLeave,
@@ -10,6 +11,13 @@ pub enum Event {
     NonWayne,
 }
 
+/// Detects and returns the Wayne Event described by the provided states
+///
+/// # Arguments
+///
+/// * `old` - An optional voice state describing the voice channel before the event.
+/// * `new_state` - The new voice state describing the voice channel after the event.
+/// * `wayne_id` - Wayne's discord id.
 pub fn event(old: &Option<VoiceState>, new_state: &VoiceState, wayne_id: &u64) -> Event {
     if new_state.user_id.as_u64() != wayne_id {
         return Event::NonWayne;
