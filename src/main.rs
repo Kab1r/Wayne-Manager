@@ -17,15 +17,21 @@
 use serenity::client::Client;
 
 use std::env;
+use std::sync::RwLock;
 
 mod handler;
-pub use handler::Handler;
+use handler::Handler;
+use handler::WayneState;
 
 /// Starts the Wayne Manager Discord Bot.
 fn main() {
+    let state = WayneState {
+        changed_channel_name: RwLock::new(None),
+    };
+
     let mut client = Client::new(
         &env::var("DISCORD_TOKEN").expect("Missing Token in Environment"),
-        Handler,
+        Handler { state: state },
     )
     .expect("Error creating client");
 

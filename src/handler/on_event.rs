@@ -5,15 +5,8 @@ use serenity::model::id::ChannelId;
 use serenity::model::voice::VoiceState;
 use serenity::prelude::Context;
 
-use lazy_static::lazy_static;
-
 use std::sync::RwLock;
-
-// Global State
-lazy_static! {
-    /// Holds the Channel Name when it is set to Wayne.
-    static ref CHANNEL_NAME_LOCK: RwLock<String> = RwLock::new(String::new());
-}
+use std::sync::RwLockWriteGuard;
 
 /// Renames the channel to Wayne.
 ///
@@ -21,20 +14,17 @@ lazy_static! {
 ///
 /// * `ctx` - The current Serenity context.
 /// * `new_state` - The state of the voice channel to be renamed.
-pub fn on_join(ctx: &Context, new_state: &VoiceState) -> () {
+pub fn on_join(
+    ctx: &Context,
+    new_state: &VoiceState,
+    channel_name_lock: &RwLock<Option<String>>,
+) -> () {
     let channel_id = new_state
         .channel_id
         .expect("Unexpected None New State Channel Id");
 
-    let mut global = match CHANNEL_NAME_LOCK.write() {
-        Ok(guard) => guard,
-        Err(poisoned) => {
-            let recovered = poisoned.into_inner();
-            println!("RwLock was poisoned, recovered: {}", recovered);
-            recovered
-        }
-    };
-    *global = channel_id.name(&ctx).expect("Unexpected None Channel Name");
+    let mut global = unwrap_or_recover(channel_name_lock);
+    *global = Some(channel_id.name(&ctx).expect("Unexpected None Channel Name"));
 
     rename_voice_channel(ctx, channel_id, "Wayne".to_string());
 }
@@ -45,21 +35,34 @@ pub fn on_join(ctx: &Context, new_state: &VoiceState) -> () {
 ///
 /// * `ctx` - The current Serenity context.
 /// * `new_state` - The state of the voice channel to be renamed.
-pub fn on_leave(ctx: &Context, old_state: &VoiceState) -> () {
+pub fn on_leave(
+    ctx: &Context,
+    old_state: &VoiceState,
+    channel_name_lock: &RwLock<Option<String>>,
+) -> () {
     let channel_id = old_state
         .channel_id
         .expect("Unexpected None New State Channel Id");
 
-    let mut global = match CHANNEL_NAME_LOCK.write() {
+    let mut global = unwrap_or_recover(channel_name_lock);
+    rename_voice_channel(
+        ctx,
+        channel_id,
+        global.clone().expect("Unexpected None global"),
+    );
+    *global = None;
+}
+
+/// Unwraps an RwLock for writing and recovers it if poisoned.
+///
+/// # Arguments
+///
+/// * `lock` - The RwLock to unwrap
+fn unwrap_or_recover<T>(lock: &RwLock<T>) -> RwLockWriteGuard<T> {
+    match lock.write() {
         Ok(guard) => guard,
-        Err(poisoned) => {
-            let recovered = poisoned.into_inner();
-            println!("RwLock was poisoned, recovered: {}", recovered);
-            recovered
-        }
-    };
-    rename_voice_channel(ctx, channel_id, global.clone());
-    *global = String::new();
+        Err(poisoned) => poisoned.into_inner(),
+    }
 }
 
 /// Renames the channel to a provided name.
