@@ -13,23 +13,13 @@ ENV BINARY_NAME_ALT=$BINARY_NAME_DEFAUKT_ALT
 # dependencies when lock and toml not is modified.
 COPY Cargo.lock .
 COPY Cargo.toml .
-RUN mkdir src \
-    && echo "fn main() {print!(\"Dummy main\");} // dummy file" > src/main.rs
-RUN set -x && cargo build --target x86_64-unknown-linux-musl --release
-
-RUN set -x && rm target/x86_64-unknown-linux-musl/release/deps/$BINARY_NAME_ALT*
-
-# Now add the rest of the project and build the real main
 COPY src ./src
-RUN set -x && cargo build --target x86_64-unknown-linux-musl --release
+RUN cargo build --target x86_64-unknown-linux-musl --release
 RUN mkdir -p /build-out
-RUN set -x && cp target/x86_64-unknown-linux-musl/release/$BINARY_NAME /build-out/
+RUN cp target/x86_64-unknown-linux-musl/release/$BINARY_NAME /build-out/
 
 # Create a minimal docker image 
-FROM scratch
-
-COPY --from=0 /etc/passwd /etc/passwd
-USER dockeruser
+FROM alpine
 
 ARG BINARY_NAME_DEFAULT
 ENV BINARY_NAME=$BINARY_NAME_DEFAULT
